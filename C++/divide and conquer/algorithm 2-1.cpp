@@ -12,44 +12,39 @@
 시간복잡도 T(n) = T(n/2) + O(1) => O(logn)
 
 */
+
 #include "pch.h"
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
-int maxvalue(vector<int> arr, int start, int end) { //1번문제
-	int mid = (start + end) / 2;
-	int idx = mid;
-	if (mid - 1 == -1 || mid + 1 == arr.size()) {
-		return mid;
-	}
 
-	if (arr[mid] - arr[mid - 1] < 0) {
-		return mid - 1;
+int func(vector<int> arr,int start,int end) {
+	printf("%d %d\n", start, end);
+	if (start == end)
+		return arr[start];
+	int mid = (start + end) / 2; //6이면 2가나오네여
+	int good = 0;
+	if (arr[start] > arr[mid+1]) {
+		good = func(arr, start, mid);
 	}
-	if (arr[mid + 1] - arr[mid] < 0) {
-		return idx;
-	}
-	else if (arr[mid + 1] - arr[mid] > 0) {
-		mid = maxvalue(arr, mid + 1, end);
-	}
-	return mid;
-
-
-
+	else
+		good =  func(arr, mid+1, end);
+	return good;
 }
 
 int main()
 {
-	int n;
-	scanf_s("%d", &n);
-	vector<int> arr(n);
-	for (int i = 0; i < n; i++) {
+	int N;
+
+	scanf_s("%d", &N);
+	vector<int> arr(N);
+	for (int i = 0; i < N; i++) {
 		scanf_s("%d", &arr[i]);
 	}
-	int max = maxvalue(arr, 0, arr.size());
-	printf("%d", arr[max]);
 
-
+	printf("%d",func(arr,0,N-1));
 }
+
 

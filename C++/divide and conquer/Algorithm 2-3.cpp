@@ -1,6 +1,6 @@
 ﻿/*
 https://algospot.com/judge/problem/read/FENCE
-T(n) = 2T(n/2) + O(n) => O(nlogn)
+T(n) = 2T(n/2) + O(n) => O(nlogn) 하지만 최악의 경우 T(n) = T(n-1) + O(n) => O(n^2)
 */
 
 #include <iostream>
@@ -32,6 +32,64 @@ int fence(vector<int>& arr, int start, int end) {
 	int b = max(area, a); //셋중에 최대값을 구함
 	return b;
 }
+int func3(vector<int> arr, int start, int end) { //Divide and Conquer 이용 (무조건 O(nlogn))
+	if (start == end) {
+		return arr[start];
+	}
+	int mid = (start + end) / 2; // 7/2 =3
+
+
+	
+
+	int count = 0;
+	int s = 0;
+	int size=0;
+	int left = mid, right = mid, x = 0;
+	int maxarea = 0;
+	bool lr = false; // false 이면 left, true 이면 right
+	int minH = min(arr[left], arr[right]);
+	while (true) {
+		size = right - left;
+		if (left >= start && right <= end) {
+			if (arr[left] > arr[right]) {
+				minH = min(minH, arr[left]);
+				s = minH * size;
+				maxarea = max(maxarea, s);
+				left--;
+			}
+			else {
+				minH = min(minH, arr[right]);
+				s = minH * size;
+				maxarea = max(maxarea, s);
+				right++;
+			}
+		}
+		else if (left >= start) {
+			minH = min(minH, arr[left]);
+			s = minH * size;
+			maxarea = max(maxarea, s);
+			left--;
+		}
+		else if (right <= end) {
+			minH = min(minH, arr[right]);
+			s = minH * size;
+			maxarea = max(maxarea, s);
+			right++;
+		}
+		else {
+			break;
+		}
+	}
+	int l = func3(arr, start, mid);
+
+	int r = func3(arr, mid + 1, end);
+
+	int good = max(l, r);
+	
+	return max(good, maxarea);
+
+}
+
 int main3() {
 	int ans[50];
 	int k = 0;
