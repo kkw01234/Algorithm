@@ -1,72 +1,77 @@
-
+import javafx.util.Pair;
 import java.io.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class BOJ7562 {
-    static ArrayList<Integer> visited = new ArrayList<>();
-    static int F=0,S=0,G=0,U=0,D=0;
-    static int[] tb = new int[2];
+    static int[] dx = {1,2,1,2,-1,-2,-1,-2};
+    static int[] dy = {2,1,-2,-1,-2,-1,2,1};
+    static boolean[][] visited;
+    static int I;
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String str = br.readLine();
-        StringTokenizer st = new StringTokenizer(str);
-        while(st.hasMoreTokens()){
-            F = Integer.parseInt(st.nextToken());
-            S = Integer.parseInt(st.nextToken());
-            G = Integer.parseInt(st.nextToken());
-            U = Integer.parseInt(st.nextToken());
-            D = Integer.parseInt(st.nextToken());
+
+        int N = Integer.parseInt(br.readLine());
+
+        for(int i=0;i<N;i++){
+            I = Integer.parseInt(br.readLine());
+            visited = new boolean[I+1][I+1];
+            String str = br.readLine();
+            StringTokenizer st = new StringTokenizer(str);
+            Pair<Integer, Integer> first;
+            Pair<Integer, Integer> second;
+            int x=0, y=0;
+            while(st.hasMoreTokens()){
+                x = Integer.parseInt(st.nextToken());
+                y = Integer.parseInt(st.nextToken());
+            }
+            first = new Pair<>(x, y);
+            str = br.readLine();
+            st = new StringTokenizer(str);
+            while(st.hasMoreTokens()){
+                x = Integer.parseInt(st.nextToken());
+                y = Integer.parseInt(st.nextToken());
+            }
+            second = new Pair<>(x, y);
+            int result = bfs(first, second);
+            bw.write(Integer.toString(result)+"\n");
         }
-        for(int i=0;i<F+1;i++){
-            visited.add(1000001);
-        }
-        tb[0] = U;
-        tb[1] = -D;
-        int result = bfs(S, G);
-        if(result >= 0)
-            bw.write(Integer.toString(result));
-        else
-            bw.write("use the stairs");
+
+
+
         bw.flush();
         bw.close();
     }
-    static int bfs(int start, int end){
-        visited.set(S, 0);
-        Queue<Integer> q= new LinkedList<>();
-        q.add(start);
-        boolean complete = false;
+    static int bfs(Pair<Integer, Integer> a, Pair<Integer, Integer> b){
+        Queue<Pair<Integer, Integer>> q= new LinkedList<>();
+        q.add(a);
+        int level = 0;
         while(!q.isEmpty()){
             int qsize = q.size();
-            for(int k =0;k<qsize;k++){
-                int x = q.peek();
+            for(int i=0;i<qsize;i++){
+                int x = q.peek().getKey();
+                int y = q.peek().getValue();
                 q.remove();
-                if(x == end){
-                    complete = true;
+                if(x == b.getKey() && y == b.getValue()){
+                    q.clear();
                     break;
                 }
-                for(int i=0;i<2;i++){
-                    int dx = x+tb[i];
-                    if(dx <= 0 || dx > F) {
+                for(int j=0;j<8;j++){
+                    if(x+dx[j] < 0 || y + dy[j]<0 || x+dx[j] > I-1 || y+dy[j] > I-1){
                         continue;
                     }
-                    if(visited.get(dx) > visited.get(x)+1) {
-                        visited.set(dx, visited.get(x) + 1);
-                        q.add(dx);
+                    if(!visited[x+dx[j]][y+dy[j]]){
+                        visited[x+dx[j]][y+dy[j]] = true;
+                        q.add(new Pair<>(x+dx[j], y+dy[j]));
                     }
                 }
             }
+            level++;
         }
-        if(complete)
-            return visited.get(end);
-        else
-            return -1;
+        return level-1;
     }
 
 }
-/*
- 단순한 BFS 문제가 아님
- 또 다시 방문 할 경우에는 둘 중 최소값을 이용할 수 있게 BFS에서 추가 필요
- (주의하자)
-*/

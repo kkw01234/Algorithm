@@ -2,7 +2,7 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ5014 {
+public class BOJ5014{
     static ArrayList<Integer> visited = new ArrayList<>();
     static int F=0,S=0,G=0,U=0,D=0;
     static int[] tb = new int[2];
@@ -19,9 +19,9 @@ public class BOJ5014 {
             U = Integer.parseInt(st.nextToken());
             D = Integer.parseInt(st.nextToken());
         }
-        for(int i=0;i<F+1;i++){ //1부터하기 위함
+        for(int i=0;i<F+1;i++){
             visited.add(1000001);
-        }//초기화
+        }
         tb[0] = U;
         tb[1] = -D;
         int result = bfs(S, G);
@@ -65,3 +65,8 @@ public class BOJ5014 {
     }
 
 }
+/*
+ 단순한 BFS 문제가 아님
+ 또 다시 방문 할 경우에는 둘 중 최소값을 이용할 수 있게 BFS에서 추가 필요
+ (주의하자)
+*/
